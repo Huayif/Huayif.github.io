@@ -1,7 +1,10 @@
 import { defineSiteConfig } from 'valaxy'
 
 export default defineSiteConfig({
-  url: 'https://valaxy.site/',
+  comment: {
+    enable: true,
+  },
+  url: 'https://huayif.github.io',//有待正式部署到个人网站上，然后再改成对应的网站名
   lang: 'zh-CN',
   title: 'Akukin咖啡馆',
   author: {

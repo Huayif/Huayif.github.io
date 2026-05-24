@@ -34,7 +34,7 @@ export default defineValaxyConfig<UserThemeConfig>({
 
     fireworks: {
       enable: true,
-      colors: ['#d096dfff', '#a7d1f3ff', '#e4c2eaff']
+      colors: ['#d096dfff', '#a7d1f3ff', 'rgba(240, 166, 255, 1)']
     },
 
     bg_image: {
@@ -83,9 +83,12 @@ export default defineValaxyConfig<UserThemeConfig>({
         icp: '暂无icp备案',
       },
     },
+
+
   },
 
   unocss: {
      safelist 
     },
+
 })

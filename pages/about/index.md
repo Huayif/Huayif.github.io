@@ -2,14 +2,38 @@
 title: 关于我
 ---
 
-I am developing [Valaxy](https://github.com/YunYouJun/valaxy) - Next Generation Static Blog Framework.
+## 我是
 
-If you like it, you can sponsor me in [GitHub](https://github.com/sponsors/YunYouJun) or [www.yunyoujun.cn/sponsors/](https://www.yunyoujun.cn/sponsors/).
+花亦枫huayif
+
+中二时期很喜欢单字id，选中了**亦** 
+
+后来模仿一位up主，更新为**伊遗矣亦**
+
+再后来，因为我很喜欢的一部动漫，又改为**花亦枫**
+
+
 
 ---
 
-我正在开发 [Valaxy](https://github.com/YunYouJun/valaxy) - 下一代静态博客框架。
+## 日常状态
 
-如果你喜欢它，你可以在 [GitHub](https://github.com/sponsors/YunYouJun) 或 [www.yunyoujun.cn/sponsors/](https://www.yunyoujun.cn/sponsors/) 赞助我。
+摸鱼领域大神
 
-Check out the [Valaxy | GitHub](https://github.com/YunYouJun/valaxy) for more details.
+---
+
+## 兴趣爱好
+
+ACG、音乐、代码
+
+
+---
+
+## 为什么搭博客？
+
+有一天突然觉得，什么都没留下来，有点可惜。
+
+于是就有了这个地方。也许会写很多，也许会鸽很久。
+
+---
+

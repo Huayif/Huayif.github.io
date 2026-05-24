@@ -29,7 +29,13 @@ declare module 'vue-router/auto-routes' {
     '/links/': RouteRecordInfo<'/links/', '/links', Record<never, never>, Record<never, never>>,
     '/page/[page]': RouteRecordInfo<'/page/[page]', '/page/:page', { page: ParamValue<true> }, { page: ParamValue<false> }>,
     '/posts/': RouteRecordInfo<'/posts/', '/posts', Record<never, never>, Record<never, never>>,
+    '/posts/animation_pt1': RouteRecordInfo<'/posts/animation_pt1', '/posts/animation_pt1', Record<never, never>, Record<never, never>>,
+    '/posts/c++_cmake_pt1': RouteRecordInfo<'/posts/c++_cmake_pt1', '/posts/c++_cmake_pt1', Record<never, never>, Record<never, never>>,
+    '/posts/dp_pt1': RouteRecordInfo<'/posts/dp_pt1', '/posts/dp_pt1', Record<never, never>, Record<never, never>>,
+    '/posts/hello_huayif-blog_pt1': RouteRecordInfo<'/posts/hello_huayif-blog_pt1', '/posts/hello_huayif-blog_pt1', Record<never, never>, Record<never, never>>,
     '/posts/hello-huayif': RouteRecordInfo<'/posts/hello-huayif', '/posts/hello-huayif', Record<never, never>, Record<never, never>>,
+    '/posts/music_pt1': RouteRecordInfo<'/posts/music_pt1', '/posts/music_pt1', Record<never, never>, Record<never, never>>,
+    '/posts/net_pt1': RouteRecordInfo<'/posts/net_pt1', '/posts/net_pt1', Record<never, never>, Record<never, never>>,
     '/tags/': RouteRecordInfo<'/tags/', '/tags', Record<never, never>, Record<never, never>>,
   }
 
@@ -88,8 +94,32 @@ declare module 'vue-router/auto-routes' {
       routes: '/posts/'
       views: never
     }
+    'pages/posts/animation_pt1.md': {
+      routes: '/posts/animation_pt1'
+      views: never
+    }
+    'pages/posts/c++_cmake_pt1.md': {
+      routes: '/posts/c++_cmake_pt1'
+      views: never
+    }
+    'pages/posts/dp_pt1.md': {
+      routes: '/posts/dp_pt1'
+      views: never
+    }
+    'pages/posts/hello_huayif-blog_pt1.md': {
+      routes: '/posts/hello_huayif-blog_pt1'
+      views: never
+    }
     'pages/posts/hello-huayif.md': {
       routes: '/posts/hello-huayif'
+      views: never
+    }
+    'pages/posts/music_pt1.md': {
+      routes: '/posts/music_pt1'
+      views: never
+    }
+    'pages/posts/net_pt1.md': {
+      routes: '/posts/net_pt1'
       views: never
     }
     'pages/tags/index.md': {

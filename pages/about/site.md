@@ -2,6 +2,23 @@
 title: 关于站点
 ---
 
-Valaxy + valaxy-theme-yun Demo Site
+## 理由
 
-- Default Theme: [valaxy-theme-yun](https://github.com/YunYouJun/valaxy/blob/main/packages/valaxy-theme-yun/)
+某天心血来潮，想着"我也该有个地方写点东西了"，然后就真的搭了一个。
+
+搭完之后发现最难的不是技术，而是——**没东西可写**。
+
+---
+
+## 更新记录
+
+- `2024.10` —— 博客初次建立
+- `2025.10` —— 加入评论区
+- `2026` —— to be continued
+
+---
+
+## 致谢
+
+感谢 [云游君](https://github.com/YunYouJun) 开发了 Valaxy 和 Yun 主题，让我这种懒人也能搭出一个还算好看的博客。
+

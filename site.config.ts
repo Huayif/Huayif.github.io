@@ -10,11 +10,14 @@ export default defineSiteConfig({
   author: {
     name: '花亦枫',
     avatar: '/avatar/favicon.jpg',
-    intro: '我怎么不当然敢.'
+    status: {
+      emoji:   '🍁',
+      message: '枫',
+    },
   },
   favicon: '/webicon/favicon.ico',
-  subtitle: 'I am because you are.',
-  description: '我低头穿过人群',
+  subtitle:'il aurait suffi', //副标题
+  description: '只将鲜花送于你',//描述（个性标签）
   social: [
     {
       name: 'RSS',

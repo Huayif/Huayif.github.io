@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://huayif.github.io/</id>
+    <title>Akukin咖啡馆</title>
+    <updated>2026-05-24T09:23:00.124Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <author>
+        <name>花亦枫</name>
+        <email>i@valaxy.site</email>
+        <uri>https://valaxy.site</uri>
+    </author>
+    <link rel="alternate" href="https://huayif.github.io/"/>
+    <link rel="self" href="https://huayif.github.io/atom.xml"/>
+    <subtitle>只将鲜花送于你</subtitle>
+    <logo>https://huayif.github.io/avatar/favicon.jpg</logo>
+    <icon>https://huayif.github.io/favicon.svg</icon>
+    <rights>CC BY-NC-SA 4.0 2026 © 花亦枫</rights>
+    <entry>
+        <title type="html"><![CDATA[动态规划从入门到精通]]></title>
+        <id>https://huayif.github.io/posts/dp_pt1</id>
+        <link href="https://huayif.github.io/posts/dp_pt1"/>
+        <updated>2026-03-23T00:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2>1. 什么是动态规划？</h2>
+<p>动态规划（Dynamic Programming，简称 DP）是一种解决<strong>多阶段决策最优化问题</strong>的算法思想。</p>
+<h3>核心特征</h3>
+<p>DP 问题通常具备两个关键性质</p>
+<br/><p>访问 <a href="https://huayif.github.io/posts/dp_pt1" target="_blank">https://huayif.github.io/posts/dp_pt1</a> 阅读全文。</p>]]></content>
+        <author>
+            <name>花亦枫</name>
+            <email>i@valaxy.site</email>
+            <uri>https://valaxy.site</uri>
+        </author>
+        <published>2026-03-23T00:00:00.000Z</published>
+        <rights>true</rights>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[计算机网络面试复习]]></title>
+        <id>https://huayif.github.io/posts/net_pt1</id>
+        <link href="https://huayif.github.io/posts/net_pt1"/>
+        <updated>2026-03-23T00:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2>1. 基础篇</h2>
+<h3>OSI 七层模型 vs TCP/IP 四层模型</h3>
+<p>| OSI 七层模型 | TCP/IP 四层模型 | 协议举例 |<br>
+|-------------|----</p>
+<br/><p>访问 <a href="https://huayif.github.io/posts/net_pt1" target="_blank">https://huayif.github.io/posts/net_pt1</a> 阅读全文。</p>]]></content>
+        <author>
+            <name>花亦枫</name>
+            <email>i@valaxy.site</email>
+            <uri>https://valaxy.site</uri>
+        </author>
+        <published>2026-03-23T00:00:00.000Z</published>
+        <rights>true</rights>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[CMake 入门]]></title>
+        <id>https://huayif.github.io/posts/c++_cmake_pt1</id>
+        <link href="https://huayif.github.io/posts/c++_cmake_pt1"/>
+        <updated>2026-03-22T00:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2>为什么要学 CMake？</h2>
+<p>写 C++ 的时候，一开始可能就一个 <code>main.cpp</code>，直接 <code>g++ main.cpp -o main</code> 就跑起来了。</p>
+<p>但项目稍微大一点，文件一多，手动敲编</p>
+<br/><p>访问 <a href="https://huayif.github.io/posts/c++_cmake_pt1" target="_blank">https://huayif.github.io/posts/c++_cmake_pt1</a> 阅读全文。</p>]]></content>
+        <author>
+            <name>花亦枫</name>
+            <email>i@valaxy.site</email>
+            <uri>https://valaxy.site</uri>
+        </author>
+        <published>2026-03-22T00:00:00.000Z</published>
+        <rights>true</rights>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[搭建个人博客！]]></title>
+        <id>https://huayif.github.io/posts/hello_huayif-blog_pt1</id>
+        <link href="https://huayif.github.io/posts/hello_huayif-blog_pt1"/>
+        <updated>2026-03-22T00:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2>为什么选 Valaxy？</h2>
+<p>在此之前我也尝试过Hexo，当然也选的yun主题</p>
+<p>但自从发现作者自研了新框架后，便果断的换了</p>
+<ul>
+<li><strong>Valaxy</strong> —— 基于 Vue 3 + Vite，主题</li>
+</ul>
+<br/><p>访问 <a href="https://huayif.github.io/posts/hello_huayif-blog_pt1" target="_blank">https://huayif.github.io/posts/hello_huayif-blog_pt1</a> 阅读全文。</p>]]></content>
+        <author>
+            <name>花亦枫</name>
+            <email>i@valaxy.site</email>
+            <uri>https://valaxy.site</uri>
+        </author>
+        <published>2026-03-22T00:00:00.000Z</published>
+        <rights>true</rights>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Hello, Huayif]]></title>
+        <id>https://huayif.github.io/posts/hello-huayif</id>
+        <link href="https://huayif.github.io/posts/hello-huayif"/>
+        <updated>2025-08-15T00:00:00.000Z</updated>
+        <content type="html"><![CDATA[<h2>介绍</h2>
+<p>基于valaxy搭建的静态博客</p>
+<br/><p>访问 <a href="https://huayif.github.io/posts/hello-huayif" target="_blank">https://huayif.github.io/posts/hello-huayif</a> 阅读全文。</p>]]></content>
+        <author>
+            <name>花亦枫</name>
+            <email>i@valaxy.site</email>
+            <uri>https://valaxy.site</uri>
+        </author>
+        <published>2025-08-15T00:00:00.000Z</published>
+        <rights>true</rights>
+    </entry>
+</feed>

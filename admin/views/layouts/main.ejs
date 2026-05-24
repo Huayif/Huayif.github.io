@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %>博客管理后台</title>
+  <link rel="stylesheet" href="/admin/static/css/admin.css">
+  <script>
+    function toast(msg, type) {
+      type = type || 'info'
+      var el = document.createElement('div')
+      el.className = 'toast toast-' + type
+      el.textContent = msg
+      document.body.appendChild(el)
+      setTimeout(function() { el.remove() }, 3000)
+    }
+    async function api(method, url, body) {
+      var opts = { method: method, headers: {} }
+      if (body) {
+        opts.headers['Content-Type'] = 'application/json'
+        opts.body = JSON.stringify(body)
+      }
+      var res = await fetch(url, opts)
+      var data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Request failed')
+      return data
+    }
+  </script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-brand">🌸 管理后台</div>
+    <ul class="sidebar-nav">
+      <li><a href="/admin" class="<%= active === 'dashboard' ? 'active' : '' %>"><span class="icon">📊</span> <span>首页看板</span></a></li>
+      <li><a href="/admin/posts" class="<%= active === 'posts' ? 'active' : '' %>"><span class="icon">📝</span> <span>文章管理</span></a></li>
+      <li><a href="/admin/config/site" class="<%= active === 'config' ? 'active' : '' %>"><span class="icon">⚙️</span> <span>站点配置</span></a></li>
+      <li><a href="/admin/assets" class="<%= active === 'assets' ? 'active' : '' %>"><span class="icon">📁</span> <span>资源管理</span></a></li>
+      <li><a href="/admin/git" class="<%= active === 'git' ? 'active' : '' %>"><span class="icon">🔀</span> <span>Git 管理</span></a></li>
+      <li style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+        <a href="/" target="_blank"><span class="icon">🏠</span> <span>查看博客</span></a>
+      </li>
+      <li>
+        <a href="/admin/logout"><span class="icon">🚪</span> <span>退出登录</span></a>
+      </li>
+    </ul>
+  </aside>
+  <main class="main">
+    <%- body %>
+  </main>
+</body>
+</html>

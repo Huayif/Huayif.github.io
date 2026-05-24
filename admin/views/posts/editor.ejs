@@ -1,0 +1,183 @@
+<div class="page-header">
+  <div>
+    <a href="/admin/posts" style="font-size:13px;color:var(--text-dim);text-decoration:none">文章管理</a>
+    <span style="color:var(--text-dim)"> / </span>
+    <h1 style="display:inline;font-size:24px"><%= slug ? '编辑文章' : '新建文章' %></h1>
+  </div>
+  <div class="flex gap-sm">
+    <a href="/admin/posts" class="btn btn-outline">取消</a>
+    <button class="btn btn-outline" onclick="saveDraft()">保存草稿</button>
+    <button class="btn btn-primary" onclick="savePost()">发布</button>
+  </div>
+</div>
+
+<!-- 基本信息 -->
+<div class="card">
+  <div class="form-row">
+    <div class="form-group" style="flex:2">
+      <label for="title">文章标题 *</label>
+      <input type="text" id="title" placeholder="输入文章标题">
+    </div>
+    <div class="form-group" style="flex:1">
+      <label for="date">日期</label>
+      <input type="date" id="date">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="slug">文件名 (留空自动生成)</label>
+      <input type="text" id="slug" placeholder="英文字母和数字">
+    </div>
+    <div class="form-group">
+      <label for="categories">分类</label>
+      <input type="text" id="categories" placeholder="输入分类名">
+    </div>
+    <div class="form-group">
+      <label for="tags-input">标签</label>
+      <input type="text" id="tags-input" placeholder="输入后回车" onkeydown="addTag(event)">
+      <div class="tag-list" id="tag-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 选项开关 -->
+<div class="card">
+  <div class="flex gap-md" style="flex-wrap:wrap">
+    <div class="toggle-group">
+      <div class="toggle" id="toggle-draft" onclick="toggleSwitch('draft')"></div>
+      <label>草稿</label>
+    </div>
+    <div class="toggle-group">
+      <div class="toggle" id="toggle-top" onclick="toggleSwitch('top')"></div>
+      <label>置顶</label>
+    </div>
+    <div class="toggle-group">
+      <div class="toggle on" id="toggle-comment" onclick="toggleSwitch('comment')"></div>
+      <label>允许评论</label>
+    </div>
+    <div class="toggle-group">
+      <div class="toggle" id="toggle-copyright" onclick="toggleSwitch('copyright')"></div>
+      <label>版权声明</label>
+    </div>
+    <div class="toggle-group">
+      <div class="toggle" id="toggle-end" onclick="toggleSwitch('end')"></div>
+      <label>完结标记</label>
+    </div>
+  </div>
+  <div class="form-row mt-sm">
+    <div class="form-group">
+      <label for="cover">封面图 (可选)</label>
+      <input type="text" id="cover" placeholder="/images/cover.jpg">
+    </div>
+    <div class="form-group">
+      <label for="excerpt">摘要 (可选)</label>
+      <input type="text" id="excerpt" placeholder="不填则自动截取正文前段">
+    </div>
+  </div>
+</div>
+
+<!-- Markdown 正文 -->
+<div class="card">
+  <div class="form-group" style="margin-bottom:0">
+    <label for="content">正文 (Markdown)</label>
+    <textarea id="content" class="code" style="min-height:500px;font-size:14px;line-height:1.7" placeholder="在此编写 Markdown 正文..."></textarea>
+  </div>
+</div>
+
+<% if (slug) { %>
+<div class="card" style="font-size:13px;color:var(--text-dim)">
+  文件: <code>pages/posts/<%= slug %>.md</code>
+</div>
+<% } %>
+
+<script>
+var tags = []
+var slug = '<%= slug || "" %>'
+var isNew = !slug
+
+if (!isNew) {
+  (async function() {
+    try {
+      var post = await api('GET', '/api/posts/' + slug)
+      document.querySelector('#title').value = post.frontmatter.title || ''
+      document.querySelector('#date').value = post.frontmatter.date || ''
+      document.querySelector('#categories').value = post.frontmatter.categories || ''
+      document.querySelector('#cover').value = post.frontmatter.cover || ''
+      document.querySelector('#excerpt').value = post.frontmatter.excerpt || ''
+      document.querySelector('#content').value = post.content || ''
+      if (post.frontmatter.tags) {
+        tags = Array.isArray(post.frontmatter.tags) ? post.frontmatter.tags : [post.frontmatter.tags]
+        renderTags()
+      }
+      setToggle('draft', !!post.frontmatter.draft)
+      setToggle('top', !!post.frontmatter.top)
+      setToggle('comment', post.frontmatter.comment !== false)
+      setToggle('copyright', !!post.frontmatter.copyright)
+      setToggle('end', !!post.frontmatter.end)
+    } catch(e) { toast('加载文章失败: ' + e.message, 'error') }
+  })()
+} else {
+  document.querySelector('#date').value = new Date().toISOString().slice(0, 10)
+  setToggle('comment', true)
+}
+
+function addTag(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault()
+    var val = e.target.value.replace(/,/g, '').trim()
+    if (val && tags.indexOf(val) === -1) { tags.push(val); renderTags() }
+    e.target.value = ''
+  }
+}
+function removeTag(idx) { tags.splice(idx, 1); renderTags() }
+function renderTags() {
+  document.querySelector('#tag-list').innerHTML = tags.map(function(t, i) {
+    return '<span class="tag">' + esc(t) + '<span class="tag-remove" onclick="removeTag(' + i + ')">&times;</span></span>'
+  }).join('')
+}
+
+function toggleSwitch(name) { document.querySelector('#toggle-' + name).classList.toggle('on') }
+function setToggle(name, on) { document.querySelector('#toggle-' + name).classList.toggle('on', on) }
+function getToggle(name) { return document.querySelector('#toggle-' + name).classList.contains('on') }
+
+function buildData() {
+  return {
+    title: document.querySelector('#title').value.trim(),
+    slug: document.querySelector('#slug').value.trim() || undefined,
+    date: document.querySelector('#date').value,
+    categories: document.querySelector('#categories').value.trim() || undefined,
+    tags: tags.length ? tags : undefined,
+    cover: document.querySelector('#cover').value.trim() || undefined,
+    excerpt: document.querySelector('#excerpt').value.trim() || undefined,
+    draft: getToggle('draft') || undefined,
+    top: getToggle('top') ? 1 : undefined,
+    comment: getToggle('comment') ? undefined : false,
+    copyright: getToggle('copyright') || undefined,
+    end: getToggle('end') || undefined
+  }
+}
+
+async function saveDraft() { return savePost(true) }
+
+async function savePost(isDraft) {
+  var data = buildData()
+  if (!data.title) { toast('请输入文章标题', 'error'); return }
+  if (isDraft) data.draft = true; else delete data.draft
+  data.content = document.querySelector('#content').value
+  try {
+    var method = isNew ? 'POST' : 'PUT'
+    var url = isNew ? '/api/posts' : '/api/posts/' + slug
+    var result = await api(method, url, data)
+    toast(isDraft ? '草稿已保存' : '文章已发布', 'success')
+    if (isNew && result.slug) {
+      slug = result.slug; isNew = false
+      history.replaceState(null, '', '/admin/posts/' + slug + '/edit')
+    }
+  } catch(e) { toast('保存失败: ' + e.message, 'error') }
+}
+
+function esc(s) {
+  if (!s) return ''
+  var d = document.createElement('div'); d.textContent = s; return d.innerHTML
+}
+</script>

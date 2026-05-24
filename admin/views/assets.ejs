@@ -1,0 +1,129 @@
+<div class="page-header">
+  <h1>资源管理</h1>
+  <div class="flex gap-sm">
+    <input type="file" id="file-input" multiple style="display:none" onchange="uploadFiles()">
+    <button class="btn btn-primary" onclick="document.querySelector('#file-input').click()">上传文件</button>
+  </div>
+</div>
+
+<div class="card">
+  <div class="flex-between mb-md">
+    <div class="flex gap-sm" style="align-items:center">
+      <strong>当前目录:</strong>
+      <code id="current-dir" style="font-size:14px">/public</code>
+      <button class="btn btn-outline" style="padding:4px 8px;font-size:12px" onclick="browse('')">根目录</button>
+      <button class="btn btn-outline" style="padding:4px 8px;font-size:12px" id="btn-parent" style="display:none" onclick="goParent()">上级目录</button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:40px"></th><th>文件名</th><th style="width:200px">操作</th></tr></thead>
+      <tbody id="file-tbody"><tr><td colspan="3" class="empty">加载中...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+var currentDir = ''
+var parentDir = ''
+
+async function browse(dir) {
+  currentDir = dir || ''
+  document.querySelector('#current-dir').textContent = '/public' + (currentDir ? '/' + currentDir : '')
+  try {
+    var data = await api('GET', '/api/assets?dir=' + encodeURIComponent(currentDir))
+    parentDir = data.parent !== undefined ? data.parent : null
+    document.querySelector('#btn-parent').style.display = parentDir !== null ? '' : 'none'
+    renderFiles(data)
+  } catch(e) { toast('加载失败: ' + e.message, 'error') }
+}
+
+function goParent() {
+  if (parentDir !== null) browse(parentDir)
+}
+
+function renderFiles(data) {
+  var html = ''
+
+  // Folders
+  ;(data.dirs || []).forEach(function(d) {
+    var fullDir = currentDir ? currentDir + '/' + d : d
+    html += '<tr class="file-row file-row--dir" onclick="browse(\'' + esc(fullDir) + '\')">' +
+      '<td style="font-size:18px;text-align:center">' + '📁' + '</td>' +
+      '<td style="font-weight:500;cursor:pointer">' + esc(d) + '/' + '</td>' +
+      '<td></td>' +
+      '</tr>'
+  })
+
+  // Files
+  ;(data.files || []).forEach(function(f) {
+    var icon = fileIcon(f.name)
+    html += '<tr class="file-row">' +
+      '<td style="font-size:16px;text-align:center">' + icon + '</td>' +
+      '<td>' +
+        '<span title="' + esc(f.path) + '">' + esc(f.name) + '</span>' +
+        ' <span style="color:var(--text-dim);font-size:12px">' + esc(f.size) + '</span>' +
+      '</td>' +
+      '<td>' +
+        '<button class="btn btn-outline" style="padding:3px 8px;font-size:11px" onclick="event.stopPropagation();copyPath(\'' + esc(f.path) + '\')">复制路径</button> ' +
+        '<button class="btn btn-danger" style="padding:3px 8px;font-size:11px" onclick="event.stopPropagation();deleteFile(\'' + esc(f.path) + '\')">删除</button>' +
+      '</td>' +
+      '</tr>'
+  })
+
+  document.querySelector('#file-tbody').innerHTML = html || '<tr><td colspan="3" class="empty">目录为空</td></tr>'
+}
+
+function fileIcon(name) {
+  if (/\.(jpg|jpeg|png|gif|svg|webp|ico|bmp)$/i.test(name)) return '🖼️'
+  if (/\.(mp4|webm|mov)$/i.test(name)) return '🎬'
+  if (/\.(mp3|wav|ogg|flac)$/i.test(name)) return '🎵'
+  if (/\.(ttf|woff2?|eot)$/i.test(name)) return '🔤'
+  if (/\.(css|scss|less)$/i.test(name)) return '🎨'
+  if (/\.(js|ts|jsx|tsx)$/i.test(name)) return '📜'
+  if (/\.(json|xml|yaml|yml)$/i.test(name)) return '📋'
+  if (/\.(md|txt|pdf)$/i.test(name)) return '📄'
+  return '📎'
+}
+
+async function uploadFiles() {
+  var files = document.querySelector('#file-input').files
+  if (!files.length) return
+
+  for (var i = 0; i < files.length; i++) {
+    var formData = new FormData()
+    formData.append('file', files[i])
+    formData.append('dir', currentDir)
+    try {
+      var res = await fetch('/api/assets/upload', { method: 'POST', body: formData })
+      if (res.ok) toast('上传成功: ' + files[i].name, 'success')
+      else { var err = await res.json(); toast('上传失败: ' + (err.error || 'Unknown'), 'error') }
+    } catch(e) { toast('上传失败: ' + e.message, 'error') }
+  }
+  document.querySelector('#file-input').value = ''
+  browse(currentDir)
+}
+
+async function deleteFile(filePath) {
+  if (!confirm('确定删除 ' + filePath + ' 吗？')) return
+  try {
+    await api('DELETE', '/api/assets', { path: filePath })
+    toast('删除成功', 'success')
+    browse(currentDir)
+  } catch(e) { toast('删除失败: ' + e.message, 'error') }
+}
+
+function copyPath(p) {
+  navigator.clipboard.writeText(p).then(function() { toast('路径已复制: ' + p, 'success') })
+}
+
+function esc(s) {
+  if (!s) return ''
+  var d = document.createElement('div')
+  d.textContent = s
+  return d.innerHTML
+}
+
+browse('')
+</script>

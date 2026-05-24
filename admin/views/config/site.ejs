@@ -1,0 +1,151 @@
+<div class="page-header">
+  <h1>站点配置</h1>
+  <button class="btn btn-primary" onclick="saveConfig()">保存配置</button>
+</div>
+
+<div class="card">
+  <h3>基本信息</h3>
+  <div class="form-row">
+    <div class="form-group"><label for="url">站点 URL</label><input type="text" id="url"></div>
+    <div class="form-group"><label for="title">站点标题</label><input type="text" id="title"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label for="subtitle">副标题</label><input type="text" id="subtitle"></div>
+    <div class="form-group"><label for="description">描述/个性签名</label><input type="text" id="description"></div>
+  </div>
+  <div class="form-group"><label for="lang">语言</label><input type="text" id="lang"></div>
+</div>
+
+<div class="card">
+  <h3>作者信息</h3>
+  <div class="form-row">
+    <div class="form-group"><label for="authorName">姓名</label><input type="text" id="authorName"></div>
+    <div class="form-group"><label for="avatar">头像路径</label><input type="text" id="avatar" placeholder="/avatar/favicon.jpg"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label for="statusEmoji">状态 Emoji</label><input type="text" id="statusEmoji"></div>
+    <div class="form-group"><label for="statusMessage">状态文字</label><input type="text" id="statusMessage"></div>
+  </div>
+  <div class="form-group"><label for="favicon">网站图标路径</label><input type="text" id="favicon" placeholder="/webicon/favicon.ico"></div>
+</div>
+
+<div class="card">
+  <h3>社交链接</h3>
+  <div id="social-list"></div>
+  <button class="btn btn-outline mt-sm" onclick="addSocial()">+ 添加社交链接</button>
+</div>
+
+<div class="card">
+  <h3>赞助配置</h3>
+  <div class="toggle-group mb-md">
+    <div class="toggle" id="toggle-sponsor" onclick="this.classList.toggle('on')"></div>
+    <label>启用赞助</label>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label for="sponsorTitle">赞助标题</label><input type="text" id="sponsorTitle"></div>
+  </div>
+  <div id="sponsor-list"></div>
+  <button class="btn btn-outline mt-sm" onclick="addSponsor()">+ 添加赞助方式</button>
+</div>
+
+<script>
+var socials = []
+var sponsors = []
+
+async function loadConfig() {
+  try {
+    var data = await api('GET', '/api/config/site')
+    document.querySelector('#url').value = data.url || ''
+    document.querySelector('#title').value = data.title || ''
+    document.querySelector('#subtitle').value = data.subtitle || ''
+    document.querySelector('#description').value = data.description || ''
+    document.querySelector('#lang').value = data.lang || ''
+
+    if (data.author) {
+      document.querySelector('#authorName').value = data.author.name || ''
+      document.querySelector('#avatar').value = data.author.avatar || ''
+      document.querySelector('#favicon').value = data.favicon || ''
+      if (data.author.status) {
+        document.querySelector('#statusEmoji').value = data.author.status.emoji || ''
+        document.querySelector('#statusMessage').value = data.author.status.message || ''
+      }
+    }
+
+    socials = data.social || []
+    sponsors = data.sponsor ? (data.sponsor.methods || []) : []
+    if (data.sponsor) {
+      document.querySelector('#sponsorTitle').value = data.sponsor.title || ''
+      document.querySelector('#toggle-sponsor').classList.toggle('on', data.sponsor.enable)
+    }
+
+    renderSocials()
+    renderSponsors()
+  } catch(e) { toast('加载配置失败: ' + e.message, 'error') }
+}
+
+function renderSocials() {
+  var html = ''
+  socials.forEach(function(s, i) {
+    html += '<div class="form-row mb-sm"><div class="form-group"><input placeholder="名称" value="' + esc(s.name) + '" onchange="socials[' + i + '].name=this.value"></div>' +
+      '<div class="form-group"><input placeholder="链接" value="' + esc(s.link) + '" onchange="socials[' + i + '].link=this.value"></div>' +
+      '<div class="form-group"><input placeholder="图标" value="' + esc(s.icon||'') + '" onchange="socials[' + i + '].icon=this.value"></div>' +
+      '<div class="form-group"><input placeholder="颜色" value="' + esc(s.color||'') + '" onchange="socials[' + i + '].color=this.value"></div>' +
+      '<button class="btn btn-danger" style="padding:4px 8px;font-size:12px" onclick="socials.splice(' + i + ',1);renderSocials()">删除</button></div>'
+  })
+  document.querySelector('#social-list').innerHTML = html || '<p class="empty">暂无社交链接</p>'
+}
+
+function addSocial() { socials.push({ name: '', link: '', icon: '', color: '' }); renderSocials() }
+
+function renderSponsors() {
+  var html = ''
+  sponsors.forEach(function(s, i) {
+    html += '<div class="form-row mb-sm"><div class="form-group"><input placeholder="名称" value="' + esc(s.name) + '" onchange="sponsors[' + i + '].name=this.value"></div>' +
+      '<div class="form-group"><input placeholder="二维码 URL" value="' + esc(s.url) + '" onchange="sponsors[' + i + '].url=this.value"></div>' +
+      '<div class="form-group"><input placeholder="图标" value="' + esc(s.icon||'') + '" onchange="sponsors[' + i + '].icon=this.value"></div>' +
+      '<div class="form-group"><input placeholder="颜色" value="' + esc(s.color||'') + '" onchange="sponsors[' + i + '].color=this.value"></div>' +
+      '<button class="btn btn-danger" style="padding:4px 8px;font-size:12px" onclick="sponsors.splice(' + i + ',1);renderSponsors()">删除</button></div>'
+  })
+  document.querySelector('#sponsor-list').innerHTML = html || '<p class="empty">暂无赞助方式</p>'
+}
+
+function addSponsor() { sponsors.push({ name: '', url: '', icon: '', color: '' }); renderSponsors() }
+
+async function saveConfig() {
+  var data = {
+    url: document.querySelector('#url').value,
+    title: document.querySelector('#title').value,
+    subtitle: document.querySelector('#subtitle').value,
+    description: document.querySelector('#description').value,
+    lang: document.querySelector('#lang').value,
+    favicon: document.querySelector('#favicon').value,
+    author: {
+      name: document.querySelector('#authorName').value,
+      avatar: document.querySelector('#avatar').value,
+      status: {
+        emoji: document.querySelector('#statusEmoji').value,
+        message: document.querySelector('#statusMessage').value
+      }
+    },
+    social: socials,
+    sponsor: {
+      enable: document.querySelector('#toggle-sponsor').classList.contains('on'),
+      title: document.querySelector('#sponsorTitle').value,
+      methods: sponsors
+    }
+  }
+  try {
+    await api('PUT', '/api/config/site', data)
+    toast('站点配置已保存', 'success')
+  } catch(e) { toast('保存失败: ' + e.message, 'error') }
+}
+
+function esc(s) {
+  if (!s) return ''
+  var d = document.createElement('div')
+  d.textContent = s
+  return d.innerHTML
+}
+
+loadConfig()
+</script>

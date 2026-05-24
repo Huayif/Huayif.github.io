@@ -1,0 +1,70 @@
+<div class="page-header">
+  <h1>首页看板</h1>
+</div>
+
+<div class="stats-grid" id="stats">
+  <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">文章总数</div></div>
+  <div class="stat-card"><div class="stat-number">-</div><div class="stat-label">待提交变更</div></div>
+</div>
+
+<div class="card">
+  <div class="flex-between mb-md">
+    <h3>最近文章</h3>
+    <a href="/admin/posts/new" class="btn btn-primary">+ 新建文章</a>
+  </div>
+  <div id="recent-posts" class="empty"><span class="empty-icon"></span><p>加载中...</p></div>
+</div>
+
+<div class="card">
+  <div class="flex-between mb-md">
+    <h3>快捷操作</h3>
+  </div>
+  <div class="flex gap-sm" style="flex-wrap:wrap">
+    <a href="/admin/posts/new" class="btn btn-primary">写新文章</a>
+    <a href="/admin/config/site" class="btn btn-outline">修改站点信息</a>
+    <a href="/admin/assets" class="btn btn-outline">上传资源</a>
+    <a href="/admin/git" class="btn btn-outline">Git 提交 / 构建部署</a>
+  </div>
+  <div id="git-quick-status" class="mt-md" style="font-size:13px;color:var(--text-dim)"></div>
+</div>
+
+<script>
+(async function() {
+  // 文章统计
+  try {
+    var posts = await api('GET', '/api/posts')
+    var html = '<table><thead><tr><th>标题</th><th>分类</th><th>日期</th><th>操作</th></tr></thead><tbody>'
+    var recent = posts.slice(0, 5)
+    recent.forEach(function(p) {
+      html += '<tr><td>' + esc(p.title || '无标题') + '</td><td>' + esc(p.categories || '-') + '</td><td>' + esc(p.date || '-') + '</td>' +
+        '<td><a href="/admin/posts/' + p.slug + '/edit" class="btn btn-outline" style="padding:4px 10px;font-size:12px">编辑</a></td></tr>'
+    })
+    html += '</tbody></table>'
+    document.querySelector('#recent-posts').innerHTML = html
+    document.querySelector('#stats').innerHTML =
+      '<div class="stat-card"><div class="stat-number">' + posts.length + '</div><div class="stat-label">文章总数</div></div>' +
+      '<div class="stat-card"><div id="changed-count" class="stat-number">...</div><div class="stat-label">待提交变更</div></div>'
+  } catch(e) { document.querySelector('#recent-posts').innerHTML = '<p>加载失败</p>' }
+
+  // Git 状态
+  try {
+    var gitData = await api('GET', '/api/git/status')
+    var count = gitData.files ? gitData.files.length : 0
+    document.querySelector('#changed-count').textContent = count
+    if (count > 0) {
+      document.querySelector('#git-quick-status').innerHTML = '变更文件: ' + gitData.files.map(function(f) { return esc(f) }).join(', ')
+    } else {
+      document.querySelector('#git-quick-status').textContent = '工作区干净'
+    }
+  } catch(e) {
+    document.querySelector('#changed-count').textContent = '?'
+  }
+})()
+
+function esc(s) {
+  if (!s) return ''
+  var d = document.createElement('div')
+  d.textContent = s
+  return d.innerHTML
+}
+</script>
